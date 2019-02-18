@@ -1,8 +1,14 @@
 import  java.util.Random;
 
-public class TrainCreator implements Runnable {
-	public int x = 0;
 
+public class TrainCreator implements Runnable {
+	private railLine line;
+	public int x;
+	
+	public TrainCreator(railLine rails) {
+		this.line = rails;
+		this.x = 0;
+	}
 	public SlowTrain createSlowTrain() {
 		this.x++;
 		return new SlowTrain(Integer.toString(this.x));
@@ -27,14 +33,17 @@ public class TrainCreator implements Runnable {
 	@Override
 	public void run() {
 		Random rand = new Random();
+		Train train = null;
 		int x = rand.nextInt(2) + 1;
 		if (x % 2 == 0) {
-			Train train = createSlowTrain();
-			System.out.println(train);
+			 train = createSlowTrain();
+//			System.out.println(train);
 		} else {
-			Train train = createFastTrain();
-			System.out.println(train);
+			 train = createFastTrain();
+//			System.out.println(train);
 		}
+		line.getRailLines().get(0).addTrain(train);
+//		System.out.println(line.getRailLines().get(0).toString());
 	}
 
 }

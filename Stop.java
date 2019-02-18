@@ -1,19 +1,24 @@
 import java.util.ArrayList;
 
-public class Track extends Stop {
+public abstract class Stop {
 	private ArrayList<Train> trains; // list of Trains that can be on at any one time
 	public final int l; // length (m)
 	public final int capacity; // 1 train on any track on any one time
 	public final String name;
 	
-	public Track() {
-		super();
+	public Stop(String name, int l) {
 		this.trains = new ArrayList<>();
 		this.l = 1000;
 		this.capacity = 1;
 		this.name = "track";
 	}
 	
+	public Stop() {
+		name = null;
+		l = 0;
+		capacity = 0;
+	}
+
 	public void addTrain(Train train) {
 		if (this.capacity > this.trains.size()) {
 			this.trains.add(train);
@@ -39,5 +44,9 @@ public class Track extends Stop {
 		one.addTrain(t);
 		one.addTrain(x);
 		System.out.println(one);
+	}
+
+	public void addTrain(Thread t) {
+		t.start();
 	}
 }

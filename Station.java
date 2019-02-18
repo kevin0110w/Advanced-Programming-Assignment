@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 
-public class Station {
+public class Station extends Stop {
 	private ArrayList<Train> trains;
 	private String name;
 	private int capacity;
 	private final int l; // length
 	
 	public Station(String name, int capacity) {
+		super();
 		this.name = name;
 		this.capacity = capacity;
 		this.l = 100;
@@ -18,6 +19,8 @@ public class Station {
 			this.trains.add(train);
 		}
 	}
+	
+	
 	
 	public String toString() {
 		String s = "";
