@@ -1,22 +1,16 @@
-
+/**
+ * This class inherits from the superclass, Train.
+ * Each instance of this class, a slow train object, will have a set speed of 10 ms-1.
+ * @author 0808148w
+ */
 public class SlowTrain extends Train {
-	private final int speed;
-	private int clockcounter;
-
 	public SlowTrain(String name) {
-		super();
-		this.trainName = name;
-//		this.setName(name);
-		this.speed = 10;
-		this.clockcounter = 0;
-	}
-	
-	public int getSpeed() {
-		return this.speed;
+		super(name);
+		this.setSpeed(10);
 	}
 	
 	@Override
 	public String toString() {
-		return "I am " + this.trainName + ", the slow train and my speed is " + this.getSpeed() + " !";
+		return "I am " + this.getTrainName() + ", the slow train and my speed is " + this.getSpeed() + " !";
 	}
 }
