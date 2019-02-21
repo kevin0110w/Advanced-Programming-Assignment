@@ -2,7 +2,7 @@ import  java.util.Random;
 
 /**
  * This class is responsible for generating a thread which will create a train object
- * @author Freckles
+ * @author 0808148w
  *
  */
 public class TrainCreator implements Runnable {

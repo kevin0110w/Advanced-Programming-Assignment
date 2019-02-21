@@ -11,6 +11,6 @@ public class SlowTrain extends Train {
 	
 	@Override
 	public String toString() {
-		return "I am " + this.getTrainName() + ", the slow train and my speed is " + this.getSpeed() + " !";
+		return "I am the " + this.getTrainName() + " train, a slow train and my speed is " + this.getSpeed() + " !";
 	}
 }

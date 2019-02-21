@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * This class defines the subclass Track, which will inherit from RailSection.
  * A track differs  as it has a max capacity of 1 and a length of 1000
- * @author Freckles
+ * @author 0808148w
  */
 public class Track extends RailSection {
 

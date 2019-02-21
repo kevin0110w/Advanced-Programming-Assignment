@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * This class defines the subclass Station, which will inherit from the class, RailSection.
  * A station differs as it has a max capacity > 1 and a length of 100
- * @author Freckles
+ * @author 0808148w
  */
 public class Station extends RailSection {
 //		private ArrayList<Train> trains;

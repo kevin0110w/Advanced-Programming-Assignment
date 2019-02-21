@@ -2,9 +2,10 @@ import java.util.ArrayList;
 
 /**
  * This class defines the superclass which both Track and Station classes will inherit from
- * @author Freckles
+ * @author 0808148w
  */
 public abstract class RailSection {
+	private boolean trainCanBeAddedToSection;
 	private ArrayList<Train> trains; // list of Trains that can be added at any time
 	private int l; // length of a stop/'segment'(m)
 	private int capacity; // 1 train on any track on any one time
@@ -14,12 +15,14 @@ public abstract class RailSection {
 	public RailSection() {
 		this.trains = new ArrayList<>();
 		this.name = null;
+		this.trainCanBeAddedToSection = true;
 	}
 
 	public RailSection(String name, int capacity) {
 		this.trains = new ArrayList<Train>();
 		this.name = name;
 		this.capacity = capacity;
+		this.trainCanBeAddedToSection = true;
 //		this.trainCapacity = new Train[capacity];
 	}
 	
@@ -63,14 +66,19 @@ public abstract class RailSection {
 		if (this.capacity > this.trains.size()) {
 			this.trains.add(train);
 			this.setStopTime();
+		} 
+		if (this.capacity == this.trains.size()) {
+			this.trainCanBeAddedToSection= false;
 		}
 	}
 	
 	/**
-	 * Abstract method to remove train which can differ depending on whether rail section is type station or track
+	 * Method to remove train which can differ depending on whether rail section is type station or track
+	 * Once a train as been removed, capacity has been restored and a new train can take this place in the future
 	 */
 	public  void removeTrain(Train trainName)  {
 		this.getTrains().remove(trainName);
+		this.trainCanBeAddedToSection = true;
 	}
 //	
 //	public void advanceTrain(Train trainName) {
@@ -137,7 +145,7 @@ public abstract class RailSection {
 		}
 		return "|----" + this.name + "--" + s + "----|";
 	}
-	
+	// checks the size after each addition to change this boolean 
 	public boolean containsTrain(Train anotherTrain) {
 		return this.trains.contains(anotherTrain);
 	}
@@ -176,5 +184,13 @@ public abstract class RailSection {
 			}
 		}
 		return aTrain;
+	}
+	
+	/**
+	 * This method checks whether a section of rail, either track or station, has enough capacity to be added on the next run
+	 * @return boolean
+	 */
+	public boolean getCanATrainBeAddedBoolean() {
+		return this.trainCanBeAddedToSection;
 	}
 }

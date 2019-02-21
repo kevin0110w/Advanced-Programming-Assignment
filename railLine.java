@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 public class RailLine extends Thread {
 	private ArrayList<RailSection> line;
 	private ArrayList<Train> trains;
@@ -43,17 +44,23 @@ public class RailLine extends Thread {
 		one.trains.add(slow);
 		glasgow.setStopTime();
 		while (true) {
-			for (Train aTrain : one.trains) {
-				if (aTrain.time == aTrain.getTimeLimit()) {
-					one.advanceTrain(aTrain);
+//			for (Train aTrain : one.trains) {
+//			if (aTrain.time >= aTrain.getTimeLimit()) {
+//				one.advanceTrain(aTrain);
+//			}
+//			aTrain.time++;
+			for (int i = 0; i < one.trains.size(); i++) {
+				if (one.trains.get(i).time >= one.trains.get(i).getTimeLimit()) {
+					one.advanceTrain(one.trains.get(i));
 				}
-				aTrain.time++;
+				one.trains.get(i).time++;
 			}
 			x++;
 			Thread.sleep(1000);
 			
-			System.out.println(one + "\tx = " + x);
+			System.out.println(one + "\tx = " + x);		
 			if (one.isEmpty()) {
+				System.out.println("Rail Line is empty!");
 				break;
 			}
 
@@ -62,7 +69,7 @@ public class RailLine extends Thread {
 				one.getStops().get(0).addTrain(anewtrain);
 				one.trains.add(anewtrain);
 				one.getStops().get(0).setStopTime();
-				System.out.println("new train added");
+				System.out.println("New train added");
 			}
 		}
 	}
@@ -70,13 +77,15 @@ public class RailLine extends Thread {
 	public void advanceTrain(Train aTrain) {
 		for (int i = 0; i < this.line.size(); i++) {
 			if (i == this.line.size()-1 && this.line.get(i).containsTrain(aTrain)) {
+				System.out.println(aTrain.getTrainName() + " at end of the line!");
 				this.line.get(i).removeTrain(aTrain);
 				this.trains.remove(aTrain);
 				break;
-			} else if (this.line.get(i).containsTrain(aTrain)) {
+			} else if (this.line.get(i).containsTrain(aTrain) && this.line.get(i+1).getCanATrainBeAddedBoolean()) {
+				System.out.println(aTrain + " moving to next part!");
 				this.line.get(i+1).addTrain(aTrain);
 				this.line.get(i+1).setStopTime();
-				this.line.get(i+1).getTrain(aTrain).resetTrainTime();
+				this.line.get(i+1).getTrain(aTrain).resetTrainTime(); // null pointer exception with a new train, why?
 				this.line.get(i).removeTrain(aTrain);
 				break;
 			}
