@@ -1,76 +1,39 @@
-import java.util.ArrayList;
-
 /**
+ * * @author 0808148w
  * This class defines the subclass Station, which will inherit from the class, RailSection.
- * A station differs as it has a max capacity > 1 and a length of 100
- * @author 0808148w
+ * A station differs as it has a max capacity > 1, which will be passed to the constructor.
+ *  @param stationLength - a defined constant for a station length
+ *  @param additionalStationTime - a constant representing the extra time that a train would stay in a station
+ *  segment of the railway line.
+ *  @param conversionFromMilliSecondsToSeconds - to help the calc in converting seconds to milliseconds ensuring correct
+ *  time is used for thread sleep in the train class.
  */
 public class Station extends RailSection {
-//		private ArrayList<Train> trains;
-//		private String name;
-//		private int capacity;
-//		private Train[] trainCapacity;
-//		private final int l; // length
-
-	public Station(String name, int capacity) {
-		super(name, capacity);
-		this.setLength(100);
-//		this.setName(name);
-//		this.capacity = capacity;
-//		this.trainCapacity = new Train[capacity];
-//		trains = new ArrayList<>();
-	}
-
+	private final int STATION_LENGTH = 100;
+	private final int ADDITIONAL_STATION_WAITING_TIME = 5; 
 
 	/**
-	 * This method will set each train's time to stop at a station on the line 
+	 * Each instance of the station object will call the constructor in the super class
+	 * The length is set using the constant, stationLength;
+	 * @param name of a station
+	 * @param capacity - maximum number of trains that can occupy a station at any time
+	 */
+	public Station(String name, int capacity) {
+		super(name, capacity);
+		this.setLength(this.STATION_LENGTH);
+	}
+
+	/**
+	 * This method calculates the time a current train will be in a station section of the rail line.
+	 * It'll be used to set the time a train thread should sleep (in seconds once it has moved to a new station segment on the 
+	 * rail line
 	 */
 	@Override
 	public void setStopTime() {
 		int time = 0;
 		for (Train aTrain : this.getTrains()) {
-			time = (this.getLength() / aTrain.getSpeed()) + 5;
+			time = (this.getLength() / aTrain.getSpeed()) + (this.ADDITIONAL_STATION_WAITING_TIME * super.getConversionRate());
 			aTrain.setTimeLimit(time);
 		}
 	}
-	
-	/**
-	public static void main(String[] args) {
-		Station glasgow = new Station("Glasgow", 3);
-		Train s = new SlowTrain("Billy");
-		Train p = new FastTrain("Joe");
-		Train t = new FastTrain("Ted");
-		Train x = new SlowTrain("Paddy");
-		glasgow.addTrain(s);
-		glasgow.addTrain(p);
-		glasgow.addTrain(t);
-		glasgow.addTrain(x);
-		System.out.println(glasgow);
-		Station EK = new Station("East Kilbride", 1);
-		System.out.println(EK);
-	}
-	*/
 }
-
-/**
-//public void addTrain(Train train) {
-//	if (this.capacity > this.trains.size()) {
-//		this.trains.add(train);
-//	}
-//}
-//
-//
-//
-//public String toString() {
-//	String s = "";
-//	for (Train trains : this.trains) {
-//		s += trains.getTrainName() + ", ";
-//	}
-//	return "|----" + this.name + "--" + s + "----|";
-//}
-//
-//@Override
-//public void setName(String name) {
-//	this.name = name;
-//}
-*/

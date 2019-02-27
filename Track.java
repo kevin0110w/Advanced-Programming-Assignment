@@ -1,71 +1,35 @@
-import java.util.ArrayList;
-
 /**
+ *  * @author 0808148w
  * This class defines the subclass Track, which will inherit from RailSection.
- * A track differs  as it has a max capacity of 1 and a length of 1000
- * @author 0808148w
+ * A track differs as it has a max capacity of 1 and a length of 1000, which are both declared in this class as constants.
+ *  @param TRACK_LENGTH - a defined constant for the length of a track segment
+ *  @param TRACK_CAPACITY - a defined constant that each track segment can only hold one train at a time
  */
 public class Track extends RailSection {
-
+	private final int TRACK_LENGTH = 1000;
+	private final int TRACK_CAPACITY = 1;
+	
+	/**
+	 * Each instance of the station object will call the constructor in the super class
+	 * The length and capacity are set using the constants, trackLength and trackCapacity respectively.
+	 */
 	public Track() {
 		super();
 		this.setName("track");
-		this.setLength(1000);
-		this.setCapacity(1) ;
-		//		this.trains = new ArrayList<>();
-		//		this.trainCapacity = new Train[1];
+		this.setLength(this.TRACK_LENGTH);
+		this.setCapacity(this.TRACK_CAPACITY) ;
+	}
 
-	}
 	/**
-	public static void main(String[] args) {
-		Track one = new Track();
-		Train s = new SlowTrain("Billy");
-		Train p = new FastTrain("Joe");
-		Train t = new FastTrain("Ted");
-		Train x = new SlowTrain("Paddy");
-		one.addTrain(s);
-		one.addTrain(p);
-		one.addTrain(t);
-		one.addTrain(x);
-		System.out.println(one);
-	}
-	 */
-	
-	/**
-	 * This method calculate the time a current train will be in a track section of the rail line.
+	 * This method calculates the time a current train will be in a track section of the rail line.
+	 * It'll be used to set the time a train thread should sleep (in seconds once it has moved to a new track segment on the 
+	 * rail line
 	 */
 	@Override
 	public void setStopTime() {
 		int time = 0;
 		Train aTrain = this.getTrains().get(0);
-		time = this.getLength() / aTrain.getSpeed();
+		time = this.getLength() / aTrain.getSpeed() * super.getConversionRate();
 		aTrain.setTimeLimit(time);
 	}
 }
-
-/**
-public class Track extends RailSection {
-	//	private ArrayList<Train> trains; // list of Trains that can be on at any one time
-	//	public final int l; // length (m)
-	//	public final int capacity; // 1 train on any track on any one time
-	//	public final String name = "track";
-	//	public Train[] trainCapacity;
-//	public void addTrain(Train train) {
-//		if (this.capacity > this.trains.size()) {
-//			this.trains.add(train);
-//		}
-//	}
-//	
-//	public void removeTrain() {
-//		this.trains.clear();
-//	}
-
-//	public String toString() {
-//		String s = "";
-//		for (Train trains : this.trains) {
-//			s += trains.getTrainName() + ", ";
-//		}
-//		return "|----" + this.name + "--" + s + "----|";
-//	}
-
-*/
