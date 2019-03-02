@@ -8,7 +8,7 @@ public class SlowTrain extends Train {
 	
 	/**
 	 * Each instance of this class will call the constructor in the superclass
-	 * The speed is set using the constant, SLOW, defined as a class variable for this subclass
+	 * The speed is set using the constant, SLOW_TRAIN_SPEED, defined as a class variable for this subclass
 	 * @param name of a train
 	 */
 	public SlowTrain(String name) {

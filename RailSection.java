@@ -2,12 +2,13 @@ import java.util.ArrayList;
 
 /**
  * @author 0808148w
- * This class defines the superclass which both Track and Station classes will inherit from
- * @param trainCanBeAddedToSection - a flag to check whether a train can be added to a section of the rail line
- * @param trains - a list of trains that are on a specific section
- * @param length - length of a 'section' (metres)
- * @param capacity - number of trains that can occupy a particular section
- * @param name - the name of a section
+ * This class defines an abstract superclass which both Track and Station classes will inherit from
+ * @param trainCanBeAddedToSection - a flag to check whether a train can be added to this section of the rail line
+ * @param trains - a list of trains that are on this section
+ * @param length - length of this 'section' (metres), each instance of either subclass will set the specific length in their constructor
+ * @param capacity - the number of trains that can occupy this section
+ * @param name - the name of this section
+ * @param SECS_TO_MS - a constant that both subclasses will invoke to convert the stop/sleep time into milliseconds
  */
 public abstract class RailSection {
 	private boolean trainCanBeAddedToSection;
@@ -15,30 +16,32 @@ public abstract class RailSection {
 	private int length; 
 	private int capacity;
 	private String name; 
-	private final  int SECS_TO_MS = 1000;
+	private final int SECS_TO_MS = 1000;
 
 	/**
 	 * This constructor is defined for the use of each instance in the track class
+	 * @param trains - a list of trains on this section
+	 * @param name - name of this rail section
+	 * @param trainCanBeAddedToSection - a flag determining whether a train can be added to this rail section
 	 */
 	public RailSection() {
-		this.trains = new ArrayList<>();
+		this.trains = new ArrayList<Train>();
 		this.name = null;
 		this.trainCanBeAddedToSection = true;
-		this.length = 0;
 	}
 
 	/**
 	 * This constructor is defined for the use of each instance in the station class
-	 * @param name
-	 * @param capacity
+	 * @param trains - a list of trains on this section
+	 * @param name - name of this rail section 
+	 * @param capacity - number of trains that can occupy this rail section
+	 * @param trainCanBeAddedToSection - a flag determining whether a train can be added to this rail section
 	 */
 	public RailSection(String name, int capacity) {
 		this.trains = new ArrayList<Train>();
 		this.name = name;
 		this.capacity = capacity;
 		this.trainCanBeAddedToSection = true;
-		this.length = 0;
-		//		this.trainCapacity = new Train[capacity];
 	}
 
 	/**
@@ -77,8 +80,8 @@ public abstract class RailSection {
 	 * This method will add/advance a train to the next section
 	 * of a rail way line providing there is room and the train thread has completed it's run
 	 * method. 
-	 * First. it'll reset the awake variable in a train object
-	 * It'll advance a train if possible and then set the time limit a train can occupy the next section of the rail line
+	 * First. it'll reset the awake flag in the train object
+	 * It'll advance a train if possible and then set the time limit the train can occupy the next section of the rail line
 	 * If a train is added and the number of trains at that section reaches the capacity of that section
 	 * , the trainCanBeAddedToSection flag will be set to false. This is used by an instance of the Rail
 	 * Line Class to determine if the next train can be added to this section
@@ -101,7 +104,7 @@ public abstract class RailSection {
 	 * of trains in that section. The trainCanBeAddedToSection flag is reset, allowing another train to be 
 	 * added in the future
 	 */
-	public  void removeTrain(Train atrain)  {
+	public void removeTrain(Train atrain)  {
 		this.getTrains().remove(atrain);
 		this.trainCanBeAddedToSection = true;
 	}
@@ -115,7 +118,7 @@ public abstract class RailSection {
 	}
 
 	/**
-	 * This method will calculate and set the length of time a train will be on a section of rail way line
+	 * This method will calculate and set the amount of time a train will be on a section of rail way line
 	 * Each subclass will implement it uniquely
 	 */
 	public abstract void setStopTime();
@@ -156,6 +159,10 @@ public abstract class RailSection {
 		return this.trainCanBeAddedToSection;
 	}
 	
+	/*
+	 * This method returns the constant SECS_TO_MS. It is defined here so that the subclass can call the setStopTime method ensuring the calculated time is correctly converted to ms.
+	 * @return int - seconds to milliseconds constant
+	 */
 	public int getConversionRate() {
 		return this.SECS_TO_MS;
 	}

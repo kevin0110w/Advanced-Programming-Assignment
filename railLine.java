@@ -54,7 +54,7 @@ public class RailLine implements Runnable  {
 	  */
 	public void addTrainToFirstStation(Train aTrain) {
 		lock.lock();
-		while (!this.line.get(0).getCanATrainBeAddedBoolean()) {
+		while (!this.line.get(0).getCanATrainBeAddedBoolean()) { 
 			try {
 				canAddCondition.await();
 			}
@@ -69,28 +69,28 @@ public class RailLine implements Runnable  {
 	}
 	
 	/**
-	 * A thread object that is passed an instance of the rail line class will try and call this method over and over again
-	 * It'll determine whether a train can move forward, by iterating over the list of trains, and checking that a train has stayed long enough in it's current rail section based on its awake flag in and
-	 * that the next section has sufficient capacity
+	 * A thread object that is passed an instance of the rail line class will try and call this method indefinitely
+	 * This method iterate through the list of trains on the line, and try and move each one based on whether the train thread has woken,  i.e. the train has stayed at least the calculated amount of time on a section of the line. 
+	 * Then it'll determine whether the train has reached the end of the line in which case, it'll be removed.
+	 * Otherwise, it'll check to see if the section of the rail line that the train wishes to move into, is ready to be occupied (i.e. has capacity) by checking the flag in the rail section(i.e station/track) object. 
 	 */
 	public void advanceTrains() {
 		lock.lock();
 		for (int i = 0 ; i < this.trains.size(); i++) {
-			if (this.trains.get(i).getCurrentRailSegment() == this.line.size()-1 && this.trains.get(i).isAwake()) { // this checks if a train at the last station on the line has stayed long enough.
-				this.line.get(this.line.size()-1).removeTrain(this.trains.get(i)); // remove a train from the last station
-				this.trains.remove(this.trains.get(i)); // remove train from overall list of trains ensuring correct printing
-			} else if (this.trains.get(i).getCurrentRailSegment() == this.line.size()-1 && !this.trains.get(i).isAwake()) { // this checks if a train at the last station on the line has stayed long enough, don't do anything if it hasn't stayed long enough
-			} 
-			else if (this.line.get(this.trains.get(i).getCurrentRailSegment()+1).getCanATrainBeAddedBoolean() && this.trains.get(i).isAwake()) { // if a train's upcoming section is empty and the train has stayed long enough in it's current section
-				this.line.get(this.trains.get(i).getCurrentRailSegment()+1).addTrain(this.trains.get(i)); // add this train to the next section
-				this.line.get(this.trains.get(i).getCurrentRailSegment()).removeTrain(this.trains.get(i)); // remove this train from the current section
-				this.trains.get(i).incrementCurrentRailSegment(); // increment the train objects counter to reflect the index of the rail way line it's in
-				Thread atrainthread = new Thread(this.trains.get(i)); // creating another thread of the train instance
-				atrainthread.start(); // start the run method and count down the timer
-			} else if (this.line.get(this.trains.get(i).getCurrentRailSegment()+1).getCanATrainBeAddedBoolean() && !this.trains.get(i).isAwake()) { // don't do anything if train hasn't stayed long enough in the current section
+			if (this.trains.get(i).isAwake()) {  // only interested in train threads that have woken up, 
+				if (this.trains.get(i).getCurrentRailSegment() == this.line.size()-1) { // check whether this train is at the last station and if so
+					this.line.get(this.line.size()-1).removeTrain(this.trains.get(i)); // remove the train from the line
+					this.trains.remove(this.trains.get(i)); // remove train from overall list of trains ensuring correct printing
+				} else if (this.trains.get(i).getCurrentRailSegment() < this.line.size()-1 && this.line.get(this.trains.get(i).getCurrentRailSegment()+1).getCanATrainBeAddedBoolean()) { // check that the current train is anywhere between first and penultimate station and whether following section can be occupied
+					this.line.get(this.trains.get(i).getCurrentRailSegment()+1).addTrain(this.trains.get(i)); // add this train to the next section
+					this.line.get(this.trains.get(i).getCurrentRailSegment()).removeTrain(this.trains.get(i)); // remove this train from the current section
+					this.trains.get(i).incrementCurrentRailSegment(); // increment the train objects counter to reflect the index of the rail way line it's now in
+					Thread atrainthread = new Thread(this.trains.get(i)); // creating another thread of the train instance
+					atrainthread.start(); // start the run method and count down the timer
+				}
 			}
 		}
-		canAddCondition.signalAll(); // signal to all threads, preferably the one created with the traincreator instance that they can complete their addTrain method 
+		canAddCondition.signalAll(); // signal to all threads, preferably the traincreator thread that they can complete the addTrain method 
 		lock.unlock();
 	}
 
@@ -107,9 +107,9 @@ public class RailLine implements Runnable  {
 	
 	/**
 	 * A print method that is called by a thread object of the printer instance
-	 * The shared resource is locked ensuring that it's not accidentally manipulated resulting in incorrect printing
-	 * As this method does not involve moving trains/creating space in the 2nd segment, it does not require a signalAll()
-	 * method
+	 * The shared rail line object is locked ensuring that it's not accidentally manipulated resulting in incorrect printing
+	 * As this method does not involve moving trains/creating space in the 2nd segment and allowing the traincreator thread
+	 * from finishing it's job,, it does not require a signalAll()  method
 	 */
 	public void printTrack() {
 		lock.lock();
@@ -118,17 +118,17 @@ public class RailLine implements Runnable  {
 	}
 	
 	/**
-	 * A thread object created from an instance of the Rail Line class will try and keep advancing trains if it's safe to do so.
+	 * A thread object created from an instance of the Rail Line class will try and keep advancing trains indefinitely
 	 */
 	@Override
 	public void run() {
-		try {
-			while (true) {
-				advanceTrains();
+		while (true) {
+			advanceTrains();
+			try {
 				Thread.sleep(SLEEP_TIME);
 			} 
-		}
-		catch (InterruptedException e) {
+			catch (InterruptedException e) {
+			}
 		}
 	}
 }

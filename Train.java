@@ -129,7 +129,7 @@ public abstract class Train implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Thread.currentThread().sleep(this.getTimeLimit());
+			Thread.sleep(this.getTimeLimit());
 		} catch (InterruptedException e) {
 		}
 		setAwake();

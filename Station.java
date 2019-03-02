@@ -32,7 +32,7 @@ public class Station extends RailSection {
 	public void setStopTime() {
 		int time = 0;
 		for (Train aTrain : this.getTrains()) {
-			time = (this.getLength() / aTrain.getSpeed()) + (this.ADDITIONAL_STATION_WAITING_TIME * super.getConversionRate());
+			time = ((this.getLength() / aTrain.getSpeed()) + this.ADDITIONAL_STATION_WAITING_TIME) * super.getConversionRate();
 			aTrain.setTimeLimit(time);
 		}
 	}

@@ -5,6 +5,7 @@
  */
 public class Printer implements Runnable {
 	private RailLine line;
+	private final int SLEEP_TIME = 1000;
 	
 	/**
 	 * Create an instance of this class 
@@ -19,14 +20,13 @@ public class Printer implements Runnable {
 	 */
 	@Override
 	public void run() {
-		try {
-			while (true) {
-				this.line.printTrack();
-				Thread.sleep(1000);
+		while (true) {
+			this.line.printTrack();
+			try {
+				Thread.sleep(SLEEP_TIME);
 			}
-		} catch (InterruptedException e) {
-			
+			catch (InterruptedException e) {
+			}
 		}
-		
 	}
 }

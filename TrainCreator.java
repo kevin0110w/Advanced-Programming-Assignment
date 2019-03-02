@@ -42,13 +42,14 @@ public class TrainCreator implements Runnable {
 	 */
 	@Override
 	public void run() {
-		try {
-			while (true) {
-				this.createTrain();
+		while (true) {
+			this.createTrain();
+			try {
 				Thread.sleep(SLEEP_TIME);
 			}
-		}catch (InterruptedException e) {
-			e.printStackTrace();
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
