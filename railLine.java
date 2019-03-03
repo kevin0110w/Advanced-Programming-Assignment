@@ -9,11 +9,11 @@ import java.util.concurrent.locks.ReentrantLock;
  * @param line - an arraylist of rail section (i.e. station / track repeats)
  * @param trains - an arraylist of trains that are currently on the railway line for printing purposes
  * @param lock - an object from the lock class to let a thread manipulate the shared resource without external interference
- * @param canAddCondition : a condition to say whether a traincreator thread can add a train because existing trains have 
+ * @param canAddCondition : a condition to say whether a traincreator thread can add a train because existing trains have been
  * shunted along the line 
  * @param - SLEEP_TIME - a thread object will try and create a new train every second
  */
-public class RailLine implements Runnable  {
+public class RailLine implements Runnable, PrintingInterface, TrainCreationInterface  {
 	private ArrayList<RailSection> line; // a railway line made up of railway sections
 	private ArrayList<Train> trains; // an arraylist of trains
 	private ReentrantLock lock; 
@@ -52,6 +52,7 @@ public class RailLine implements Runnable  {
 	  * If it's not possible for the train to be added, the thread will  enter the waiting state and relinquish the lock object
 	  * @param aTrain instance created by the createTrain() method in the TrainCreator class
 	  */
+	@Override
 	public void addTrainToFirstStation(Train aTrain) {
 		lock.lock();
 		while (!this.line.get(0).getCanATrainBeAddedBoolean()) { 
@@ -107,14 +108,10 @@ public class RailLine implements Runnable  {
 	
 	/**
 	 * A print method that is called by a thread object of the printer instance
-	 * The shared rail line object is locked ensuring that it's not accidentally manipulated resulting in incorrect printing
-	 * As this method does not involve moving trains/creating space in the 2nd segment and allowing the traincreator thread
-	 * from finishing it's job,, it does not require a signalAll()  method
 	 */
+	@Override
 	public void printTrack() {
-		lock.lock();
 		System.out.println(this);
-		lock.unlock();
 	}
 	
 	/**

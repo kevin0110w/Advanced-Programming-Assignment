@@ -159,7 +159,7 @@ public abstract class RailSection {
 		return this.trainCanBeAddedToSection;
 	}
 	
-	/*
+	/**
 	 * This method returns the constant SECS_TO_MS. It is defined here so that the subclass can call the setStopTime method ensuring the calculated time is correctly converted to ms.
 	 * @return int - seconds to milliseconds constant
 	 */

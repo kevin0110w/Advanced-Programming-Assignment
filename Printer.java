@@ -4,15 +4,15 @@
  * It'll call the printTrack() method in the rail Line class
  */
 public class Printer implements Runnable {
-	private RailLine line;
+	private PrintingInterface printingInterface;
 	private final int SLEEP_TIME = 1000;
 	
 	/**
 	 * Create an instance of this class 
 	 * @param aline - a rail line object
 	 */
-	public Printer(RailLine aline) {
-		this.line = aline;
+	public Printer(PrintingInterface printingInterface) {
+		this.printingInterface = printingInterface;
 	}
 	
 	/**
@@ -21,7 +21,7 @@ public class Printer implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			this.line.printTrack();
+			this.printingInterface.printTrack();
 			try {
 				Thread.sleep(SLEEP_TIME);
 			}

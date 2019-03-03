@@ -10,13 +10,17 @@ import  java.util.Random;
  * @param - SLEEP_TIME - a thread object will try and create a new train every second
  */
 public class TrainCreator implements Runnable {
-	private RailLine line;
+//	private RailLine line;
+	private TrainCreationInterface trainCreationInterface;
 	private Random rand = new Random();
 	private  int trainNumber = 0; 
-	private  final int SLEEP_TIME = 1000;
+	private  int SLEEP_TIME;
 	
-	public TrainCreator(RailLine aline) {
-		this.line = aline;
+	public TrainCreator(TrainCreationInterface trainCreator) {
+//		this.line = aline;
+		this.trainCreationInterface = trainCreator;
+		this.SLEEP_TIME = 0;
+		
 	}
 	
 	/**
@@ -29,20 +33,22 @@ public class TrainCreator implements Runnable {
 		Train aNewTrain = null;
 		int random = rand.nextInt();
 		if (random % 2 == 0) {
-			aNewTrain = new SlowTrain(this.trainNumber + "s");
+			aNewTrain = new SlowTrain(this.trainNumber +"");
 		}
 		else {
-			aNewTrain = new ExpressTrain(this.trainNumber + "e");
+			aNewTrain = new ExpressTrain(this.trainNumber + "");
 		}
-		this.line.addTrainToFirstStation(aNewTrain); 
+//		this.line.addTrainToFirstStation(aNewTrain);
+		this.trainCreationInterface.addTrainToFirstStation(aNewTrain);
 	}
 	
 	/**
-	 * Instructions for train creator thread to keep creating a new train and sleep for 1 second
+	 * Instructions for train creator thread to keep creating a new train and sleep for a random number of milliseconds between 1000 and 5000
 	 */
 	@Override
 	public void run() {
 		while (true) {
+			this.SLEEP_TIME = rand.nextInt(5000) + 1000;
 			this.createTrain();
 			try {
 				Thread.sleep(SLEEP_TIME);
