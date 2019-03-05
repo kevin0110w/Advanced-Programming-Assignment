@@ -56,10 +56,10 @@ public class RailLine implements Runnable, PrintingInterface, TrainCreationInter
 	  */
 	@Override
 	public void addTrainToFirstStation(Train aTrain) {
-		lock.lock();
+		lock2.lock();
 		while (!this.line.get(0).getCanATrainBeAddedBoolean()) { 
 			try {
-				canAddCondition.await();
+				canAdvanceCondition.await();
 			}
 			catch (InterruptedException e) {
 			} 
@@ -68,7 +68,7 @@ public class RailLine implements Runnable, PrintingInterface, TrainCreationInter
 		this.trains.add(aTrain); // add train to this list of trains, required for printing purposes - toString()
 		Thread newTrainThread = new Thread(aTrain);  // create new thread object with instance of the train passed as argument
 		newTrainThread.start(); // start the thread object (i.e. run the timer down for a train to stay in a section)
-		lock.unlock(); 
+		lock2.unlock(); 
 	}
 	
 	/**
@@ -137,43 +137,54 @@ public class RailLine implements Runnable, PrintingInterface, TrainCreationInter
 		}
 	}	
 	
+	/**
+	 * A thread of train object type will call this method to move to the next section on the rail line. If there is not enough room, determined by the flag, the thread will go into the waiting state.
+	 * This will allow other threads of train object type to call the leave method
+	 * @param atrain - a reference of the current train that has 'awoken' and calling this method
+	 */
 	public void enter(Train atrain) {
 		lock2.lock();
-		System.out.println("one");
+		if (atrain.getCurrentRailSegment() == this.line.size()-1) { // if train has gotten to end of the line, we can escape out of this loop and relinquish the lock
+//			atrain.trainAdvanced();	
+			canAdvanceCondition.signal();
+			lock2.unlock();
+			return;
+		}
 		while (!atrain.getLine().getStops().get(atrain.getCurrentRailSegment()+1).getCanATrainBeAddedBoolean()) {
 			try {
 				canAdvanceCondition.await();
 			} catch (InterruptedException e) {
 			}
 		}
-			if (atrain.getCurrentRailSegment() < this.line.size()-1) {
-			this.line.get(atrain.getCurrentRailSegment()+1).addTrain(atrain);
-			atrain.incrementCurrentRailSegment();
-			System.out.println(this.line.get(1).getTrains().get(0).getName());
-			} else if (atrain.getCurrentRailSegment() == this.line.size()-1) {
-				this.line.get(this.line.size()-1).removeTrain(atrain); // remove the train from the line
-//			this.trains.remove(atrain); // remove train from overall list of trains ensuring correct printing
-		}
+//		if (atrain.getCurrentRailSegment() < this.line.size()-1) {
+		this.line.get(atrain.getCurrentRailSegment()+1).addTrain(atrain);
+//		} 
+		//			else if (atrain.getCurrentRailSegment() == this.line.size()-1) {
+		//				this.line.get(this.line.size()-1).removeTrain(atrain); // remove the train from the line
+		//			this.trains.remove(atrain); // remove train from overall list of trains ensuring correct printing
+		//		}
 		atrain.trainAdvanced();	
-		canAdvanceCondition.signalAll();
+//		canAdvanceCondition.signal();
 		lock2.unlock();
 	}
 	
 	public void leave(Train atrain) {
 		lock2.lock();
-		while (!atrain.getTrainAdvanced()) {
-			try {
-				canAdvanceCondition.await();
-			} catch (InterruptedException e) {
-			}
+		if (atrain.getCurrentRailSegment() == this.line.size() -1) { // if the current train is at the end of the railway line, 
+			this.line.get(this.line.size()-1).removeTrain(atrain); // we can remove it from the rail line
+			this.trains.remove(atrain); // and remove it from the list of trains for correct printing purposes
+			canAdvanceCondition.signal(); // signal other threads to wake up and enter next station if possible
+			lock2.unlock(); // unlock the lock 
+			return; // exit method
+		} else { 
+		this.line.get(atrain.getCurrentRailSegment()).removeTrain(atrain); // otherwise, remove the train from the section of the rail way line it was occupying  
+		atrain.incrementCurrentRailSegment(); // increment it's counter that holds the index of the line it's occupying
+		atrain.resetTrainAdvanced(); // reset the flag
+		Thread atrainthread = new Thread(atrain);  // create a new thread object 
+		atrainthread.start();  // start the train's timer again
+		canAdvanceCondition.signal(); // signal other threads
+		lock2.unlock();   // unlock the lock
 		}
-		this.trains.remove(atrain);
-		this.line.get(atrain.getCurrentRailSegment()).removeTrain(atrain);
-		atrain.incrementCurrentRailSegment();
-		atrain.resetTrainAdvanced();
-		Thread atrainthread = new Thread(atrain);
-		atrainthread.start();
-		canAdvanceCondition.signalAll();
-		lock2.unlock();
+		
 	}
 }

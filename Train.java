@@ -154,9 +154,7 @@ public abstract class Train implements Runnable {
 	public void setLine(RailLine aline) {
 		this.railline = aline;
 	}
-	public String toString() {
-		System.out.println("I'm a train!");
-	}
+
 	/**
 	 * When a train thread invokes the start method, it'll sleep for the time it should remain in a segment of the railway line
 	 * as a minimum. Once it awakens, it'll change the awake flag, which an instance of the Rail Line class will use to determine

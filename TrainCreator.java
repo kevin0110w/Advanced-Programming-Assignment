@@ -35,14 +35,13 @@ public class TrainCreator implements Runnable {
 	public void createTrain() {
 		this.trainNumber++; 
 		Train aNewTrain = null;
-		/**
 		int random = rand.nextInt();
 		if (random % 2 == 0) {
 			aNewTrain = new SlowTrain(this.trainNumber +"S", this.line);
 		}
-		else {*/
+		else {
 			aNewTrain = new ExpressTrain(this.trainNumber + "E", this.line);
-//		}
+		}
 //		this.trainCreationInterface.addTrainToFirstStation(aNewTrain);
 		this.line.addTrainToFirstStation(aNewTrain);
 	}
