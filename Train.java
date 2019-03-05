@@ -4,7 +4,7 @@
  * When a thread calls the start method, (i.e. when it's advanced to the next segment on the railway line)
  * it'll sleep for as long as the time that the train object,
  * passed to the thread constructor, should stay in it's current segment as a minimum. 
- * If a thread has finished the sleep and the boolean "awake" is set to true,  this is the basis of when the train can advance
+ * If a thread has finished the sleep, it'll call the enter and leave methods sequentially to finalise the move.
  * @author 0808148w
  */
 public abstract class Train implements Runnable {
@@ -12,23 +12,24 @@ public abstract class Train implements Runnable {
 	private int speed;
 	private int timeLimit;
 	private int currentRailSegment; 
-	private boolean awake; 
+	private RailLine railline;
 
 	/**
 	 * This constructor is defined and will be called by each instance in the subclasses
-	 * @param name - name of a train
+	 * @param name - name of a train is passed to the constructor
+	 * @param - line - a reference of the created rail way line is passed to the constructor
+	 *  * @param name - name of a train
 	 * @param speed - speed of a train - each instance of the subclass will adjust this depending on whether express or slow
 	 * train
 	 * @param - timelimit - the minimum time that a thread of the train object should stay in the segment
-	 * @param - awake - a flag that is used by an instance of the rail line class, 
-	 * to determine if a thread has complete the sleep method and can advance
-	 */
-	public Train(String name) {
+	 * @param - line - a reference of the created rail way line is passed to the constructor
+	 */	
+	public Train(String name, RailLine line) {
 		this.trainName = name;
 		this.speed = 0;
 		this.timeLimit = 0;
 		this.currentRailSegment = 0;
-		this.awake = false;
+		this.railline = line;
 	}
 
 	/**
@@ -62,7 +63,6 @@ public abstract class Train implements Runnable {
 	public int getSpeed() {
 		return this.speed;
 	}
-
 
 	/**
 	 * This method will return the time an instance of the subclass should stay on a section of the rail line
@@ -98,40 +98,25 @@ public abstract class Train implements Runnable {
 	}
 	
 	/**
-	 * This method is used to determine whether a train object has woken (i.e. the thread has finished it's run method)
-	 * @return boolean - true if complete
+	 * Method to get the rail way line
+	 * @return the line in its current form
 	 */
-	public boolean isAwake() {
-		return this.awake;
+	public RailLine getLine() {
+		return this.railline;
 	}
-	
+
 	/**
-	 * This method is called once a thread awakens to set the flag used by the instance of the rail line class to determine if
-	 * a train can advance to the next step of the rail way line
-	 */
-	public void setAwake() {
-		this.awake = true;
-	}
-	
-	/**
-	 * This method is called by an instance of the rail section class after a train has been added
-	 * to the next section and resets the flag.
-	 */
-	public void setNotAwake() {
-		this.awake= false;
-	}
-	
-	/**
-	 * When a train thread invokes the start method, it'll sleep for the time it should remain in a segment of the railway line
-	 * as a minimum. Once it awakens, it'll change the awake flag, which an instance of the Rail Line class will use to determine
-	 * if a train can advance to the next stage.
-	 */
+	 * When a train thread invokes the start method in the rail line class, it'll start sleeping for the calculated time by the setStopTime() in the RailSection class
+	 * as a minimum. Once it awakens, it'll call the enter method in the Rail Line class to try and move to the next section. If that's not possible, it'll go into the waiting state.
+	 * If it is possible, it'll call the leave method in the Rail Line class which 'finalises' the move and the line is updated in the rail line class. 
+	*/
 	@Override
 	public void run() {
 		try {
 			Thread.sleep(this.getTimeLimit());
 		} catch (InterruptedException e) {
 		}
-		setAwake();
+		this.railline.enterSection(this);
+		this.railline.leaveSection(this);
 	}
 }

@@ -9,7 +9,7 @@ public class Printer implements Runnable {
 	
 	/**
 	 * Create an instance of this class 
-	 * @param aline - a rail line object
+	 * @param PrintingInterface printingInterface - an interface that describes the printing method, passed as an argument here
 	 */
 	public Printer(PrintingInterface printingInterface) {
 		this.printingInterface = printingInterface;
