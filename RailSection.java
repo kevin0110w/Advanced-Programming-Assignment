@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 /**
  * @author 0808148w
- * This class defines an abstract superclass which both Track and Station classes will inherit from
+ * This class defines an abstract superclass which both Track and Station classes will inherit from. Each subclass will inherit the abstract setStopTime() method that will determine how long a train will stay in a section of the railway line
  * @param trainCanBeAddedToSection - a flag to check whether a train can be added to this section of the rail line
  * @param trains - a list of trains that are on this section
  * @param length - length of this 'section' (metres), each instance of either subclass will set the specific length in their constructor
@@ -78,9 +78,7 @@ public abstract class RailSection {
 
 	/**
 	 * This method will add/advance a train to the next section
-	 * of a rail way line providing there is room and the train thread has completed it's run
-	 * method. 
-	 * First. it'll reset the awake flag in the train object
+	 * of a rail way line providing there is room and the train thread has completed slept long enough
 	 * It'll advance a train if possible and then set the time limit the train can occupy the next section of the rail line
 	 * If a train is added and the number of trains at that section reaches the capacity of that section
 	 * , the trainCanBeAddedToSection flag will be set to false. This is used by an instance of the Rail
@@ -88,7 +86,6 @@ public abstract class RailSection {
 	 * @param train object 
 	 */
 	public void addTrain(Train train) {
-		train.setNotAwake();
 		if (this.capacity > this.trains.size()) {
 			this.trains.add(train);
 			this.setStopTime();

@@ -10,9 +10,8 @@ public class ExpressTrain extends Train {
 	 * Each instance of this class will call the constructor in the superclass
 	 * The speed is set using the constant, FAST_TRAIN_SPEED.
 	 * @param name of a train
+	 * @param line - a reference of the railway line will be passed to contructor
 	 */
-//	public ExpressTrain(String name) {
-//		super(name);
 	public ExpressTrain(String name, RailLine line) {
 		super(name, line);
 		this.setSpeed(this.FAST_TRAIN_SPEED);

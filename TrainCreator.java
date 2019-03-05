@@ -3,34 +3,30 @@ import  java.util.Random;
 /**
  * @author 0808148w
  * This class is responsible for generating a thread that will create trains endlessly
- * @param trainCreationInterface - the constructor accepts an interface as an argument. This'll mean that an instance of this class will only have access to the method in that interface,
+ * @param line - a rail way line - an object of this class will be updated on any changes to the line
  * rather than all methods in the rail line class had an instance from that class was passed
- * @param rand - to generate a random number to determine to form slow or express train
- * @param - x - an integer used to name each train
+ * @param rand - random object to generate a random number to determine to form slow or express train
+ * @param - trainNumber - an integer used to name each train
  * @param - SLEEP_TIME - a thread object will try and create a new train between 1 and 5 seconds
  */
 public class TrainCreator implements Runnable {
-	private TrainCreationInterface trainCreationInterface;
 	private Random rand = new Random();
 	private int trainNumber = 0; 
 	private int SLEEP_TIME;
 	private RailLine line;
 	
 	/**
-	 * The constructor makes use of polymorphism
-	 * @param trainCreator
+	 * The constructor creates an instance of this class.
+	 * @param aline - a reference to a rail line object
 	 */
-//	public TrainCreator(TrainCreationInterface trainCreator) {
 	public TrainCreator(RailLine aline) {
-//		this.trainCreationInterface = trainCreator;
 		this.line = aline;
 		this.SLEEP_TIME = 0;
 	}
 	
 	/**
-	 * Method of creating and adding a new train to the first station, called by a thread object created in the threadcreator class 
-	 * Random choice between express and slow trains.
-	 * The method is declared in the interface
+	 * Method of creating and adding a new train to the first station, called by a thread object created in the TrainCreator class 
+	 * The choice of train is randomly determined between express and slow trains. 
 	 */
 	public void createTrain() {
 		this.trainNumber++; 
@@ -42,12 +38,11 @@ public class TrainCreator implements Runnable {
 		else {
 			aNewTrain = new ExpressTrain(this.trainNumber + "E", this.line);
 		}
-//		this.trainCreationInterface.addTrainToFirstStation(aNewTrain);
 		this.line.addTrainToFirstStation(aNewTrain);
 	}
 	
 	/**
-	 * Instructions for train creator thread to keep creating a new train and sleep for a random number of milliseconds between 1000 and 5000
+	 * Instructions for train creator thread to keep creating a new train and sleep between 1000 and 5000 milliseconds.
 	 */
 	@Override
 	public void run() {

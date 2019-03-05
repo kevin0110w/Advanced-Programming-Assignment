@@ -1,5 +1,5 @@
 /**
- * * @author 0808148w
+ * @author 0808148w
  * This class defines the subclass Station, which will inherit from the class, RailSection.
  * A station differs as it has a max capacity > 1, which will be passed to the constructor.
  *  @param stationLength - a defined constant for a station length

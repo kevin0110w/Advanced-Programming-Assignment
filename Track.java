@@ -1,5 +1,5 @@
 /**
- *  * @author 0808148w
+ * @author 0808148w
  * This class defines the subclass Track, which will inherit from RailSection.
  * A track differs as it has a max capacity of 1 and a length of 1000, which are both declared in this class as constants.
  *  @param TRACK_LENGTH - a defined constant for the length of a track segment
@@ -8,7 +8,7 @@
 public class Track extends RailSection {
 	private final int TRACK_LENGTH = 1000;
 	private final int TRACK_CAPACITY = 1;
-	
+
 	/**
 	 * Each instance of the station object will call the constructor in the super class
 	 * The length and capacity are set using the constants, trackLength and trackCapacity respectively.
