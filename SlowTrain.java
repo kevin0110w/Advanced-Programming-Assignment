@@ -11,8 +11,10 @@ public class SlowTrain extends Train {
 	 * The speed is set using the constant, SLOW_TRAIN_SPEED, defined as a class variable for this subclass
 	 * @param name of a train
 	 */
-	public SlowTrain(String name) {
-		super(name);
+//	public SlowTrain(String name) {
+//		super(name);
+	public SlowTrain(String name, RailLine line) {
+		super(name, line);
 		this.setSpeed(this.SLOW_TRAIN_SPEED);
 	}
 }

@@ -2,44 +2,49 @@ import  java.util.Random;
 
 /**
  * @author 0808148w
- * This class is responsible for generating a thread which will create trains endlessly, providing there is space in the
- * first segment
- * @param line - rail line object
+ * This class is responsible for generating a thread that will create trains endlessly
+ * @param trainCreationInterface - the constructor accepts an interface as an argument. This'll mean that an instance of this class will only have access to the method in that interface,
+ * rather than all methods in the rail line class had an instance from that class was passed
  * @param rand - to generate a random number to determine to form slow or express train
  * @param - x - an integer used to name each train
- * @param - SLEEP_TIME - a thread object will try and create a new train every second
+ * @param - SLEEP_TIME - a thread object will try and create a new train between 1 and 5 seconds
  */
 public class TrainCreator implements Runnable {
-//	private RailLine line;
 	private TrainCreationInterface trainCreationInterface;
 	private Random rand = new Random();
-	private  int trainNumber = 0; 
-	private  int SLEEP_TIME;
+	private int trainNumber = 0; 
+	private int SLEEP_TIME;
+	private RailLine line;
 	
-	public TrainCreator(TrainCreationInterface trainCreator) {
-//		this.line = aline;
-		this.trainCreationInterface = trainCreator;
+	/**
+	 * The constructor makes use of polymorphism
+	 * @param trainCreator
+	 */
+//	public TrainCreator(TrainCreationInterface trainCreator) {
+	public TrainCreator(RailLine aline) {
+//		this.trainCreationInterface = trainCreator;
+		this.line = aline;
 		this.SLEEP_TIME = 0;
-		
 	}
 	
 	/**
-	 * Method of creating a new train, called by a threadcreator_2 thread object when there is space in the first station, 
-	 * a new instance of the rail line class is returned to update the rail line class variable 
-	 *  so that each system.out.print provides an updated snapshot of the line (i.e. with the new train added on)
+	 * Method of creating and adding a new train to the first station, called by a thread object created in the threadcreator class 
+	 * Random choice between express and slow trains.
+	 * The method is declared in the interface
 	 */
 	public void createTrain() {
 		this.trainNumber++; 
 		Train aNewTrain = null;
+		/**
 		int random = rand.nextInt();
 		if (random % 2 == 0) {
-			aNewTrain = new SlowTrain(this.trainNumber +"");
+			aNewTrain = new SlowTrain(this.trainNumber +"S", this.line);
 		}
-		else {
-			aNewTrain = new ExpressTrain(this.trainNumber + "");
-		}
-//		this.line.addTrainToFirstStation(aNewTrain);
-		this.trainCreationInterface.addTrainToFirstStation(aNewTrain);
+		else {*/
+			aNewTrain = new ExpressTrain(this.trainNumber + "E", this.line);
+//		}
+//		this.trainCreationInterface.addTrainToFirstStation(aNewTrain);
+		this.line.addTrainToFirstStation(aNewTrain);
 	}
 	
 	/**

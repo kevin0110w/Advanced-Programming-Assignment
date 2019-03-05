@@ -13,6 +13,8 @@ public abstract class Train implements Runnable {
 	private int timeLimit;
 	private int currentRailSegment; 
 	private boolean awake; 
+	private RailLine railline;
+	private boolean trainAdvanced = false;
 
 	/**
 	 * This constructor is defined and will be called by each instance in the subclasses
@@ -29,7 +31,31 @@ public abstract class Train implements Runnable {
 		this.timeLimit = 0;
 		this.currentRailSegment = 0;
 		this.awake = false;
+		this.trainAdvanced = false;
 	}
+	
+	public Train(String name, RailLine line) {
+		this.trainName = name;
+		this.speed = 0;
+		this.timeLimit = 0;
+		this.currentRailSegment = 0;
+		this.awake = false;
+		this.railline = line;
+		this.trainAdvanced = false;
+	}
+	
+	public boolean getTrainAdvanced() {
+		return this.trainAdvanced;
+	}
+	
+	public void trainAdvanced() {
+		this.trainAdvanced = true;
+	}
+	
+	public void resetTrainAdvanced() {
+		this.trainAdvanced = false;
+	}
+	
 
 	/**
 	 * This method will set the name of a train
@@ -121,11 +147,21 @@ public abstract class Train implements Runnable {
 		this.awake= false;
 	}
 	
+	public RailLine getLine() {
+		return this.railline;
+	}
+	
+	public void setLine(RailLine aline) {
+		this.railline = aline;
+	}
+	public String toString() {
+		System.out.println("I'm a train!");
+	}
 	/**
 	 * When a train thread invokes the start method, it'll sleep for the time it should remain in a segment of the railway line
 	 * as a minimum. Once it awakens, it'll change the awake flag, which an instance of the Rail Line class will use to determine
 	 * if a train can advance to the next stage.
-	 */
+	 
 	@Override
 	public void run() {
 		try {
@@ -133,5 +169,16 @@ public abstract class Train implements Runnable {
 		} catch (InterruptedException e) {
 		}
 		setAwake();
+	}
+	*/
+	
+	@Override
+	public void run() {
+		try {
+			Thread.sleep(this.getTimeLimit());
+		} catch (InterruptedException e) {
+		}
+		this.railline.enter(this);
+		this.railline.leave(this);
 	}
 }
