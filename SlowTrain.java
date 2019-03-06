@@ -4,7 +4,7 @@
  * @author 0808148w
  */
 public class SlowTrain extends Train {
-	private final int SLOW_TRAIN_SPEED = 10; 
+	private final int SLOW_TRAIN_SPEED = 100; 
 	
 	/**
 	 * Each instance of this class will call the constructor in the superclass

@@ -119,16 +119,13 @@ public class RailLine implements PrintingInterface  {
 		lock.lock();
 		if (atrain.getCurrentRailSegment() == this.line.size() -1) {
 			this.line.get(this.line.size()-1).removeTrain(atrain);
-			canAdvanceCondition.signalAll();
-			lock.unlock(); 
-			return; 
 		} else { 
 			this.line.get(atrain.getCurrentRailSegment()).removeTrain(atrain);
 			atrain.incrementCurrentRailSegment(); 
 			Thread atrainthread = new Thread(atrain); 
 			atrainthread.start();  
-			canAdvanceCondition.signalAll();
-			lock.unlock();
 		}
+		canAdvanceCondition.signalAll();
+		lock.unlock(); 
 	}
 }
