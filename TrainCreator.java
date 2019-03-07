@@ -47,7 +47,7 @@ public class TrainCreator implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			this.SLEEP_TIME = rand.nextInt(5000) + 1000;
+			this.SLEEP_TIME = (rand.nextInt(5) + 1) * 1000;
 			this.createTrain();
 			try {
 				Thread.sleep(SLEEP_TIME);

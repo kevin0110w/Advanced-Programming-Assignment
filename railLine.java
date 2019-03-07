@@ -19,7 +19,7 @@ public class RailLine implements PrintingInterface  {
 	private final int SLEEP_TIME = 1000;
 
 	public RailLine() {
-		this.line = new ArrayList<>();
+		this.line = new ArrayList<RailSection>();
 		this.lock = new ReentrantLock();
 		this.canAdvanceCondition = lock.newCondition();
 	} 

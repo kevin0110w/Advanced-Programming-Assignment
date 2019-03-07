@@ -12,13 +12,13 @@ public abstract class Train implements Runnable {
 	private int speed;
 	private int timeLimit;
 	private int currentRailSegment; 
-	private RailLine railline;
+	private RailLine railwayLine;
 
 	/**
 	 * This constructor is defined and will be called by each instance in the subclasses
 	 * @param name - name of a train is passed to the constructor
 	 * @param - line - a reference of the created rail way line is passed to the constructor
-	 *  * @param name - name of a train
+	 * @param name - name of a train
 	 * @param speed - speed of a train - each instance of the subclass will adjust this depending on whether express or slow
 	 * train
 	 * @param - timelimit - the minimum time that a thread of the train object should stay in the segment
@@ -29,7 +29,7 @@ public abstract class Train implements Runnable {
 		this.speed = 0;
 		this.timeLimit = 0;
 		this.currentRailSegment = 0;
-		this.railline = line;
+		this.railwayLine = line;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public abstract class Train implements Runnable {
 	 * @return the line in its current form
 	 */
 	public RailLine getLine() {
-		return this.railline;
+		return this.railwayLine;
 	}
 
 	/**
@@ -116,7 +116,7 @@ public abstract class Train implements Runnable {
 			Thread.sleep(this.getTimeLimit());
 		} catch (InterruptedException e) {
 		}
-		this.railline.enterSection(this);
-		this.railline.leaveSection(this);
+		this.railwayLine.enterSection(this);
+		this.railwayLine.leaveSection(this);
 	}
 }
